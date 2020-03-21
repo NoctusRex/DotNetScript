@@ -26,7 +26,6 @@ namespace DotNetScriptbase
                 ConsoleHelper.WriteError(ex);
                 ConsoleHelper.WriteWarning("Use 'help' for a list of commands.");
             }
-
         }
 
         private static void LoadCommands()
@@ -72,7 +71,9 @@ namespace DotNetScriptbase
             switch (foundIdentifiers.Count)
             {
                 case 0:
-                    throw new InvalidOperationException($"Invalid argument {mainCommand}.");
+                    if(arguments.Length != 1) throw new InvalidOperationException($"Invalid argument {mainCommand}.");
+                    Commands.First(x => x is RunCommand).TryExecute(arguments);
+                    break;
 
                 case 1:
                     Commands.First(x => x.Identifiers.Contains(foundIdentifiers.First())).TryExecute(arguments.Skip(1).ToArray());

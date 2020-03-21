@@ -5,6 +5,7 @@ internal class Test2
 	public void Print(string text)
 	{
 		Console.WriteLine(text);
+		Console.ReadKey();
 	}
 	
 }

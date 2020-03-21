@@ -1,4 +1,5 @@
 ﻿using DotNetScript.Base;
+using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -29,11 +30,15 @@ namespace DotNetScript.Commands
 
         internal CompilerResults CompileFile(string sourceFile, bool asExecutable, bool inMemory)
         {
-            CodeDomProvider provider = sourceFile.EndsWith(".cs") ? CodeDomProvider.CreateProvider("CSharp") : CodeDomProvider.CreateProvider("VisualBasic");
+            CodeDomProvider provider;
+
+            if (sourceFile.EndsWith(".cs")) provider = new CSharpCodeProvider();
+                else provider = new VBCodeProvider();
+
             CompilerResults results = provider.CompileAssemblyFromFile(new CompilerParameters()
             {
                 GenerateExecutable = asExecutable, // compile as library (dll)
-                GenerateInMemory = inMemory, // as a physical file or not
+                GenerateInMemory = inMemory // as a physical file or not
             }, sourceFile);
 
             if (results.Errors.Count != 0) ThrowErros(sourceFile, results);
